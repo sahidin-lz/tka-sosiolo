@@ -28,7 +28,8 @@ export const SEBAB_AKIBAT_OPTIONS: Record<'A' | 'B' | 'C' | 'D' | 'E', string> =
   E: 'Pernyataan dan alasan, KEDUANYA SALAH',
 };
 
-export function detectTkaType(q: Question): TkaType {
+export function detectTkaType(q: Question | undefined): TkaType {
+  if (!q) return 'pilihan_ganda';
   if (q.question_type) {
     return q.question_type;
   }
@@ -52,7 +53,7 @@ export function detectTkaType(q: Question): TkaType {
   return 'pilihan_ganda';
 }
 
-export function getTkaTypeDetails(q: Question): TkaTypeDetails {
+export function getTkaTypeDetails(q: Question | undefined): TkaTypeDetails {
   const type = detectTkaType(q);
 
   if (type === 'kompleks') {
@@ -96,7 +97,8 @@ export function getTkaTypeDetails(q: Question): TkaTypeDetails {
   };
 }
 
-export function getOptionText(q: Question, key: 'A' | 'B' | 'C' | 'D' | 'E'): string {
+export function getOptionText(q: Question | undefined, key: 'A' | 'B' | 'C' | 'D' | 'E'): string {
+  if (!q) return '';
   const type = detectTkaType(q);
   const rawOpt = q[`option_${key.toLowerCase()}` as keyof Question] as string;
 

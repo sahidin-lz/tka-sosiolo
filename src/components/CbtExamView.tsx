@@ -31,7 +31,25 @@ export const CbtExamView: React.FC<CbtExamViewProps> = ({
   const [showConfirmSubmitModal, setShowConfirmSubmitModal] = useState<boolean>(false);
   const startTimeRef = useRef<number>(Date.now());
 
-  const currentQuestion: Question = exam.questions[currentQuestionIndex];
+  const currentQuestion: Question | undefined = exam.questions[currentQuestionIndex];
+
+  if (!currentQuestion) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50">
+        <div className="bg-white p-8 rounded-2xl shadow-xl text-center space-y-4 max-w-md w-full">
+          <AlertTriangle className="w-12 h-12 text-red-500 mx-auto" />
+          <h2 className="text-xl font-bold text-slate-800">Error Memuat Soal</h2>
+          <p className="text-sm text-slate-600">Soal tidak ditemukan atau data korup. Silakan kembali ke dashboard.</p>
+          <button
+            onClick={onCancelExam}
+            className="px-6 py-2 bg-slate-900 text-white rounded-xl text-sm font-bold shadow hover:bg-slate-800 transition-all"
+          >
+            Kembali ke Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // Timer Countdown Effect
   useEffect(() => {
@@ -170,7 +188,7 @@ export const CbtExamView: React.FC<CbtExamViewProps> = ({
                 <div>
                   <div className="flex items-center space-x-2">
                     <span className="text-xs text-slate-500 font-bold uppercase tracking-wider">
-                      Soal Nomor {currentQuestionIndex + 1} dari {exam.total_questions}
+                      Soal Nomor {currentQuestionIndex + 1} dari {exam.questions.length}
                     </span>
                     {(() => {
                       const tkaDetails = getTkaTypeDetails(currentQuestion);
@@ -326,12 +344,12 @@ export const CbtExamView: React.FC<CbtExamViewProps> = ({
             </button>
 
             <span className="text-xs text-slate-500 font-bold">
-              Soal {currentQuestionIndex + 1} / {exam.total_questions}
+              Soal {currentQuestionIndex + 1} / {exam.questions.length}
             </span>
 
-            {currentQuestionIndex < exam.total_questions - 1 ? (
+            {currentQuestionIndex < exam.questions.length - 1 ? (
               <button
-                onClick={() => setCurrentQuestionIndex((prev) => Math.min(exam.total_questions - 1, prev + 1))}
+                onClick={() => setCurrentQuestionIndex((prev) => Math.min(exam.questions.length - 1, prev + 1))}
                 className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-black text-xs transition-all flex items-center space-x-1 cursor-pointer shadow-md"
               >
                 <span>Berikutnya</span>

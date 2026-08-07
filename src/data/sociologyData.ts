@@ -6,6 +6,9 @@ import { TKA_EXAMS_EXTRA } from './examsDataExtra';
 import { TKA_EXAMS_EXTRA_2 } from './examsDataExtra2';
 import { TKA_EXAMS_EXTRA_3 } from './examsDataExtra3';
 import { TKA_EXAMS_MISSING } from './examsDataExtra4';
+import { TKA_EXAMS_MISSING } from './examsDataExtra4';
+import { TKA_EXAMS_MISSING } from './examsDataExtra4';
+import { TKA_EXAMS_MISSING } from './examsDataExtra4';
 
 export const INITIAL_USER: User = INITIAL_STUDENT_USERS[0];
 

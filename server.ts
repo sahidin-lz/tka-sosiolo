@@ -59,7 +59,7 @@ async function startServer() {
       });
 
       // Calculate Normal Score (0 - 100) and IRT Score (0 - 100)
-      const normalScore = Math.round((total_correct / exam.total_questions) * 100);
+      const normalScore = Math.round((total_correct / exam.questions.length) * 100);
       const irtRatio = weighted_total_points > 0 ? (weighted_earned_points / weighted_total_points) : 0;
       const irtScore = Math.min(100, Math.round(irtRatio * 100));
 
@@ -77,7 +77,7 @@ async function startServer() {
         start_time: new Date(Date.now() - duration_spent_seconds * 1000).toISOString(),
         end_time: new Date().toISOString(),
         duration_spent_seconds,
-        total_questions: exam.total_questions,
+        total_questions: exam.questions.length,
         score: irtScore, // Primary score in scale 100 is IRT
         normal_score: normalScore,
         irt_score: irtScore,
