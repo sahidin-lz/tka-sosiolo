@@ -1,0 +1,106 @@
+import React from 'react';
+import { ChevronRight, Play } from 'lucide-react';
+import { Course, User } from '../types';
+
+interface CourseListProps {
+  user: User;
+  courses: Course[];
+  onStartCourse: (courseId: string) => void;
+  onNavigate: () => void;
+}
+
+export const CourseList: React.FC<CourseListProps> = ({ user, courses, onStartCourse, onNavigate }) => {
+  return (
+    <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-5">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-bold text-slate-800">Modul Belajar Kurikulum Sosiologi</h2>
+          <p className="text-xs text-slate-600">Pilih modul kelas 10, 11, atau 12 untuk mulai belajar</p>
+        </div>
+
+        <button
+          onClick={onNavigate}
+          className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center space-x-1 cursor-pointer"
+        >
+          <span>Lihat Semua</span>
+          <ChevronRight className="w-4 h-4" />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {courses.map((course) => {
+          const progressPercent = course.totalLessons > 0 ? Math.round((course.completedLessons / course.totalLessons) * 100) : 0;
+          const userGrade = user.grade || 10;
+          const isAboveGrade = course.grade_level > userGrade && userGrade !== 12;
+
+          return (
+            <div
+              key={course.id}
+              className={`group bg-slate-50 hover:bg-indigo-50/40 rounded-2xl p-4 border transition-all duration-200 flex flex-col justify-between space-y-4 ${
+                isAboveGrade ? 'border-orange-200 bg-orange-50/30' : 'border-slate-200 hover:border-indigo-300'
+              }`}
+            >
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border ${
+                      isAboveGrade 
+                        ? 'bg-orange-100 text-orange-700 border-orange-200' 
+                        : 'bg-indigo-100 text-indigo-700 border-indigo-200'
+                    }`}>
+                      Kelas {course.grade_level} SMA
+                    </span>
+                    {isAboveGrade && (
+                      <span className="text-[9px] font-black bg-orange-600 text-white px-2 py-0.5 rounded-full animate-pulse uppercase">
+                        Level Tinggi
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-xs text-slate-600 font-medium">{course.category}</span>
+                </div>
+
+                <h3 className="font-black text-sm text-slate-900 group-hover:text-indigo-800 transition-colors line-clamp-2">
+                  {course.title}
+                </h3>
+
+                {isAboveGrade && (
+                  <div className="p-2 bg-orange-100 border border-orange-200 rounded-lg">
+                    <p className="text-[10px] font-bold text-orange-800 leading-tight">
+                      ⚠️ Materi ini di atas jenjangmu saat ini (Kelas {userGrade}). Kamu tetap bisa belajar, tapi mungkin lebih menantang!
+                    </p>
+                  </div>
+                )}
+
+                <p className="text-xs text-slate-800 font-medium line-clamp-2 leading-relaxed">{course.description}</p>
+              </div>
+
+              <div className="space-y-2">
+                {/* Progress bar */}
+                <div className="space-y-1">
+                  <div className="flex justify-between text-[11px] font-black text-slate-800">
+                    <span>Progres Belajar</span>
+                    <span>{progressPercent}%</span>
+                  </div>
+                  <div className="w-full bg-slate-300 rounded-full h-1.5 overflow-hidden">
+                    <div
+                      className="bg-indigo-600 h-full rounded-full transition-all duration-300"
+                      style={{ width: `${progressPercent}%` }}
+                    ></div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => onStartCourse(course.id)}
+                  className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-xl text-xs transition-all flex items-center justify-center space-x-1.5 cursor-pointer shadow-md"
+                >
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <span>{progressPercent > 0 ? 'Lanjutkan Belajar' : 'Mulai Modul Ini'}</span>
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
